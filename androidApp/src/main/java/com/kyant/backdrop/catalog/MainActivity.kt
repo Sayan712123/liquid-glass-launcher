@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
+import com.kyant.backdrop.catalog.launcher.LauncherScreen
 
 class MainActivity : ComponentActivity() {
 
@@ -12,7 +13,7 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            MainContent()
+            LauncherScreen()
         }
     }
 }

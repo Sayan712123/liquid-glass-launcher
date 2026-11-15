@@ -12,12 +12,24 @@ android {
         applicationId = "com.kyant.backdrop.catalog"
         minSdk = 23
         targetSdk = 37
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "2.0.1-launcher"
         androidResources.localeFilters += arrayOf("en")
+
+        // POCO M4 5G is arm64-v8a. Shipping only that ABI roughly halves the
+        // native payload and the install footprint on a 4 GB device.
+        ndk {
+            abiFilters += listOf("arm64-v8a")
+        }
     }
 
     buildTypes {
+        debug {
+            // Keep debug unminified so the shipped APK stays debuggable and
+            // Compose Multiplatform resources are not stripped.
+            isMinifyEnabled = false
+            isShrinkResources = false
+        }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
