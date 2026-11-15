@@ -1,0 +1,38 @@
+name: Bootstrap source
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download upstream source
+        run: |
+          curl -sSL -o /tmp/src.zip "https://imserver.teamily.ai/im_api/object/2296809414163472/msg_file_1a1e09d6490eb0b6dfb647684454ae41_0/AndroidLiquidGlass-2.0.1.zip"
+          ls -lh /tmp/src.zip
+          unzip -q -o /tmp/src.zip -d /tmp/extract
+          ls /tmp/extract
+
+      - name: Copy into repo
+        run: |
+          SRC=$(find /tmp/extract -maxdepth 1 -mindepth 1 -type d | head -1)
+          echo "SRC=$SRC"
+          rsync -a --exclude '.git' --exclude '.idea' "$SRC"/ ./
+          rm -rf androidApp/release
+          ls -la
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Import AndroidLiquidGlass 2.0.1 source" || echo "nothing to commit"
+          git push
